@@ -1,5 +1,7 @@
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+
 
 interface Option {
   id: number;
@@ -22,6 +24,8 @@ interface ApiResponse {
 
 const DisplayQuestionsContainer: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
+  const{data,status}=useSession()
+  console.log(data.user.email)
  
 
   useEffect(() => {

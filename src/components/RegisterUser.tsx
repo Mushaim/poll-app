@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/react';
 
 const Registration = () => {
   const [username, setUsername] = useState('');
@@ -12,7 +13,6 @@ const Registration = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Send the data to the createUser API endpoint
     const response = await fetch('/api/createUser', {
       method: 'POST',
       body: JSON.stringify({ username, email, password }),
@@ -22,6 +22,11 @@ const Registration = () => {
     });
 
     if (response.ok) {
+        await signIn('credentials', {
+            email: email,
+            password: password,
+            callbackUrl: '/',
+          });
       router.push('/DisplayQuestionContainer');
     } else {
       const errorData = await response.json();

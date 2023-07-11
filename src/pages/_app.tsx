@@ -2,16 +2,12 @@ import type { AppProps } from 'next/app';
 import 'tailwindcss/tailwind.css';
 import '../styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
-import React from 'react';
-import EmailProvider from '../context/EmailContext';
 
-const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
+export default function App({ Component, pageProps }: AppProps) {
   return (
-    <EmailProvider>
+    <SessionProvider>
       <Component {...pageProps} />
-    </EmailProvider>
+    </SessionProvider>
   );
-};
-
-export default MyApp;
+}
 

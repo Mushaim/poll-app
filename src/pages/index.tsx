@@ -4,6 +4,7 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import LoginContainer from './LoginContainer';
 import { useRouter } from 'next/router';
+import DisplayQuestionContainer from './DisplayQuestionContainer';
 
 
 const Home: NextPage = () => {
@@ -24,7 +25,7 @@ const Home: NextPage = () => {
 
       <div  >
 
-<LoginContainer></LoginContainer>
+<DisplayQuestionContainer></DisplayQuestionContainer>
 
 </div>
      

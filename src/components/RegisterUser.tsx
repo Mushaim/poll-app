@@ -1,9 +1,13 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const Registration = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -18,10 +22,15 @@ const Registration = () => {
     });
 
     if (response.ok) {
-      // User registration successful, redirect or show a success message
+      router.push('/DisplayQuestionContainer');
     } else {
-      // Error handling
+      const errorData = await response.json();
+      setErrorMessage(errorData.message);
     }
+  };
+
+  const navigateToLogin = () => {
+    router.push('/LoginContainer');
   };
 
   return (
@@ -29,7 +38,7 @@ const Registration = () => {
       <div className="max-w-md w-full bg-white p-6 rounded-md shadow-md">
         <h2 className="text-2xl font-bold mb-6">Registration</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+        <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
             <input
               type="text"
@@ -66,6 +75,19 @@ const Registration = () => {
             Register
           </button>
         </form>
+        {errorMessage && (
+          <div className="text-red-500 mt-4">
+            <p>{errorMessage}</p>
+          </div>
+        )}
+        <div className="text-center mt-4">
+          <p className="text-gray-600">
+            Already have an account?{' '}
+            <a className="text-indigo-500" onClick={navigateToLogin}>
+              Login
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

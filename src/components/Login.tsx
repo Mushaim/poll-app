@@ -1,5 +1,6 @@
 import React, { useRef, useContext } from "react";
 import { EmailContext } from "@/context/EmailContext";
+import { useRouter } from "next/router";
 
 interface Props {
   onLoginBtnClicked: (email: string | null, password: string | undefined) => void;
@@ -10,15 +11,20 @@ const Login: React.FC<Props> = ({ onLoginBtnClicked }) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const { setEmail } = useContext(EmailContext);
+  const router = useRouter();
 
   const onBtnClicked = (event: React.SyntheticEvent) => {
     event.preventDefault();
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
     onLoginBtnClicked(email || null, password);
-    setEmail(email); 
+    setEmail(email);
   };
-  
+
+  const navigateToRegister = () => {
+    router.push("/RegisterUserContainer");
+  };
+
   return (
     <>
       <div className="p-8 h-screen flex justify-center items-center bg-gray-100">
@@ -57,6 +63,14 @@ const Login: React.FC<Props> = ({ onLoginBtnClicked }) => {
               >
                 LOGIN
               </button>
+            </div>
+            <div className="text-center mt-4">
+              <label className="text-gray-600">
+                Do not have an account?{" "}
+                <a className="text-indigo-500" onClick={navigateToRegister}>
+                  Register now
+                </a>
+              </label>
             </div>
           </form>
         </div>

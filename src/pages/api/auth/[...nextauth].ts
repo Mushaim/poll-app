@@ -1,18 +1,19 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { PrismaClient, User } from '@prisma/client';
-import { AuthOptions } from 'next-auth';
-import NextAuth from 'next-auth/next';
+//import NextAuth from 'next-auth/next';
+import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 
 const loginUserSchema = z.object({
- email: z.string().regex(/^[a-z0-9_-]{3,15}$/g, 'Invalid email'),
+  email: z.string().regex(/^[a-z0-9_-]{3,15}$/g, 'Invalid email'),
   password: z.string().min(5, 'Password should be minimum 5 characters'),
 });
+
 const prisma = new PrismaClient();
 
-const authOptions: AuthOptions = {
+const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
@@ -23,7 +24,7 @@ const authOptions: AuthOptions = {
       async authorize(credentials, req) {
         const { email, password } = loginUserSchema.parse(credentials);
         const user = await prisma.user.findUnique({
-          where: { email:email },
+          where: { email: email },
         });
         if (!user) return null;
 
@@ -31,17 +32,17 @@ const authOptions: AuthOptions = {
 
         if (!isPasswordValid) return null;
 
-        return user;
+        return {user}as any;
       },
     }),
   ],
   callbacks: {
-    session({ session, token }) {
+    session({ session, token }: { session: any; token: any }) {
       session.user.id = token.id;
       session.user.email = token.email;
       return session;
     },
-    jwt({ token, account, user }) {
+    jwt({ token, account, user }: { token: any; account: any; user: any }) {
       if (account) {
         token.accessToken = account.access_token;
         token.id = user.id;

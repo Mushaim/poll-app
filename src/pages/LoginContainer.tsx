@@ -2,6 +2,7 @@ import Login from "@/components/Login";
 import { NextPage } from "next";
 import { useState } from "react";
 import { useRouter } from 'next/router';
+import { signIn } from "next-auth/react";
 
 const LoginContainer: NextPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -28,8 +29,12 @@ const LoginContainer: NextPage = () => {
           throw new Error(data.error);
         }
         
-        if (data.id) {
-          const userId = data.id;
+        if (data) {
+          await signIn('credentials', {
+            email: data.email,
+            password: data.password,
+            callbackUrl: '/',
+          });
           router.push(`/DisplayQuestionContainer`);
         } else {
           console.log(data);

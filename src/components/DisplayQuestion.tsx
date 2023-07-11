@@ -1,3 +1,5 @@
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -22,6 +24,22 @@ interface ApiResponse {
 
 const DisplayQuestionsContainer: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [session, setSession] = useState<any>(null);
+
+  const getSessionData = async () => {
+    try {
+      const session = await getServerSession();
+      if (!session) {
+        router.push('/login'); 
+      } 
+      else {
+        setSession(session);
+        console.log(JSON.stringify(session))
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     fetchQuestions();
@@ -75,6 +93,13 @@ const DisplayQuestionsContainer: React.FC = () => {
 
   return (
     <>
+          {/* Render user session information */}
+          {session && (
+        <div className="flex justify-end mt-4 mr-4">
+          <p className="text-gray-500">Logged in as: {JSON.stringify(session)}</p>
+        </div>
+      )}
+
       <div className="flex justify-end mt-4 mr-4">
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"

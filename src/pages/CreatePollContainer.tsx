@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import CreatePoll from "@/components/CreatePoll";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import LoginRequired from "@/utils/loginRequired";
 
 const CreatePollContainer: React.FC = () => {
+  try {
+    LoginRequired();
+  } catch (error) {
+    console.error(error);
+  }
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const { data: session } = useSession();
   const router = useRouter();
+  
 
   const onSubmitBtnClicked = async (questionsWithAnswers: {
     question: string;

@@ -1,6 +1,7 @@
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import LoginRequired from '../utils/loginRequired';
 
 
 interface Option {
@@ -24,6 +25,17 @@ interface ApiResponse {
 
 const DisplayQuestionsContainer: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
+
+  const { data: session } = useSession();
+
+  const handleLogout = () => {
+    signOut();
+  };
+  try {
+    LoginRequired();
+  } catch (error) {
+    console.error(error);
+  }
 
   useEffect(() => {
     fetchQuestions();
@@ -98,6 +110,14 @@ const DisplayQuestionsContainer: React.FC = () => {
           </div>
         ))}
       </div>
+      {session && (
+        <button
+          className="fixed bottom-4 right-4 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      )}
     </>
   );
 };

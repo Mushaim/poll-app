@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
+import LoginRequired from '@/utils/loginRequired';
 
 const Registration = () => {
   const [username, setUsername] = useState('');

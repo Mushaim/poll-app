@@ -1,30 +1,30 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import CreatePoll from "@/components/CreatePoll";
-import { EmailContext } from "@/context/EmailContext";
-import router from "next/router";
-
-interface Props {
-  email: string;
-}
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const CreatePollContainer: React.FC = () => {
-  const { email } = useContext(EmailContext);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const onSubmitBtnClicked = async (questionsWithAnswers: {
     question: string;
     options: string[];
   }) => {
     try {
-      console.log("email", email)
-      console.log("questionsWithAnswers", questionsWithAnswers);
+      if (!session?.user?.email) {
+        throw new Error("User email not found in session.");
+      }
+      console.log("container:", session.user.email)
+
       const response = await fetch("/api/createPoll", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...questionsWithAnswers, email }),
+        body: JSON.stringify({ ...questionsWithAnswers, session }),
       });
 
       if (response.ok) {
@@ -37,11 +37,7 @@ const CreatePollContainer: React.FC = () => {
     }
   };
 
-  return (
-    <>
-      <CreatePoll onSubmitBtnClicked={onSubmitBtnClicked} />
-    </>
-  );
+  return <CreatePoll onSubmitBtnClicked={onSubmitBtnClicked} />;
 };
 
 export default CreatePollContainer;

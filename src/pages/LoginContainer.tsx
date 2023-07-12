@@ -31,9 +31,9 @@ const LoginContainer: NextPage = () => {
         
         if (data) {
           await signIn('credentials', {
-            email: data.email,
-            password: data.password,
-            callbackUrl: '/',
+            email: email,
+            password: password,
+            //callbackUrl: '/',
           });
           router.push(`/DisplayQuestionContainer`);
         } else {

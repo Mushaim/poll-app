@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react';
 import router from 'next/router';
 import React, { useState } from 'react';
 
@@ -26,6 +27,7 @@ interface PollProps {
 }
 
 const Poll: React.FC<PollProps> = ({ question, emailRef }) => {
+  const { data: session } = useSession();
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [percentages, setPercentages] = useState<Record<number, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,6 +45,9 @@ const Poll: React.FC<PollProps> = ({ question, emailRef }) => {
     setIsSubmitting(true);
 
     try {
+      if (!session?.user?.email) {
+        throw new Error("User email not found in session.");
+      }
       const response = await fetch('/api/calculateAnswers', {
         method: 'POST',
         headers: {
@@ -51,6 +56,7 @@ const Poll: React.FC<PollProps> = ({ question, emailRef }) => {
         body: JSON.stringify({
           questionId: question.id,
           optionId: selectedOptionId,
+          session
         }),
       });
 
@@ -58,7 +64,7 @@ const Poll: React.FC<PollProps> = ({ question, emailRef }) => {
         const data = await response.json();
         setPercentages(data.percentages);
       } else {
-        throw new Error('Failed to submit answer');
+        throw new Error("already submitted the answer");
       }
     } catch (error) {
       console.error(error);

@@ -1,15 +1,13 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { PrismaClient, User } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 //import NextAuth from 'next-auth/next';
 import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
+import fetch from 'node-fetch';
 
-const loginUserSchema = z.object({
-  email: z.string().regex(/^[a-z0-9_-]{3,15}$/g, 'Invalid email'),
-  password: z.string().min(5, 'Password should be minimum 5 characters'),
-});
+
 
 const prisma = new PrismaClient();
 
@@ -22,17 +20,17 @@ const authOptions: NextAuthOptions = {
         password: { type: 'password', placeholder: 'Pa$$w0rd' },
       },
       async authorize(credentials, req) {
-        const { email, password } = loginUserSchema.parse(credentials);
+        const { email, password } = credentials;
         const user = await prisma.user.findUnique({
           where: { email: email },
         });
         if (!user) return null;
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+       if(password!==user.password){
+        return null
+       }
 
-        if (!isPasswordValid) return null;
-
-        return {user}as any;
+        return user as any;
       },
     }),
   ],
@@ -46,7 +44,7 @@ const authOptions: NextAuthOptions = {
       if (account) {
         token.accessToken = account.access_token;
         token.id = user.id;
-        token.email = (user as User).email;
+        token.email = (user).email;
         console.log({ user });
       }
       return token;

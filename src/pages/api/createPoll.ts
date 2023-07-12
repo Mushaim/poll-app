@@ -8,26 +8,22 @@ const createPollHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const { question, options, email } = req.body;
-    console.log("emailinAPI",email);
-
+    const { question, options, session} = req.body;
+    console.log(question,options,session)
     if (!question || !options || options.length < 2) {
       return res.status(400).json({ error: 'Please provide a question and at least two options.' });
     } else if (options.length > 4) {
       return res.status(400).json({ error: 'Please provide a question and at most four options.' });
     }
-    
 
     const user = await prisma.user.findUnique({
-      where: { email: email },
+      where: { email: session.user.email },
       select: { id: true },
     });
-    
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    console.log(user.id)
 
     const createdQuestion = await prisma.question.create({
       data: {

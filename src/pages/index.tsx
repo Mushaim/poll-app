@@ -12,7 +12,7 @@ const Home: NextPage = () => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/CreatePollContainer');
+    router.push('/DisplayQuestionContainer');
   };
   return (
     <>

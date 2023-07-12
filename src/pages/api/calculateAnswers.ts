@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import { PrismaClient } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 
 const prisma = new PrismaClient();
 
@@ -10,16 +11,37 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const { questionId, optionId } = req.body;
+      
+
+      const { questionId, optionId,session } = req.body;
+
+      const user = await prisma.user.findUnique({
+        where: { email: session.user.email },
+        select: { id: true },
+      });
 
       if (!optionId) {
         return res.status(400).json({ error: 'No option selected' });
       }
+      const existingAnswer = await prisma.answer.findFirst({
+        where: {
+          questionId: parseInt(questionId),
+          userId: user.id,
+        },
+      });
+
+      if (existingAnswer) {
+        return res
+          .status(409)
+          .json({ error: 'User has already answered the question' });
+      }
+      
 
       const answer = await prisma.answer.create({
         data: {
           option: { connect: { id: parseInt(optionId) } },
           question: { connect: { id: parseInt(questionId) } },
+          user: { connect: { id: user.id } },
         },
         include: { question: { include: { options: true, answers: true } } },
       });

@@ -24,9 +24,6 @@ interface ApiResponse {
 
 const DisplayQuestionsContainer: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
-  const{data,status}=useSession()
-  console.log(data.user.email)
- 
 
   useEffect(() => {
     fetchQuestions();

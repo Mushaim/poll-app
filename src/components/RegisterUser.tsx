@@ -25,7 +25,7 @@ const Registration = () => {
         await signIn('credentials', {
             email: email,
             password: password,
-            callbackUrl: '/',
+            callbackUrl: '/DisplayQuestionContainer',
           });
       router.push('/DisplayQuestionContainer');
     } else {

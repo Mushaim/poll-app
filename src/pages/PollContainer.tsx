@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Poll from '@/components/Poll';
-import LoginRequired from '@/utils/loginRequired';
+import LoginRequired from './loginRequired';
 
 interface Option {
   id: number;

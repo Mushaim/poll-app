@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CreatePoll from "@/components/CreatePoll";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import LoginRequired from "@/utils/loginRequired";
+import LoginRequired from "./loginRequired";
 
 const CreatePollContainer: React.FC = () => {
   try {

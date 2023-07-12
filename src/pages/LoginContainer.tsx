@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { useState } from "react";
 import { useRouter } from 'next/router';
 import { signIn } from "next-auth/react";
-import LoginRequired from "@/utils/loginRequired";
+import LoginRequired from "./loginRequired";
 
 const LoginContainer: NextPage = () => {
   const [errorMessage, setErrorMessage] = useState("");

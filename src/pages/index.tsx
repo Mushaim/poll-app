@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 import LoginContainer from './LoginContainer';
 import { useRouter } from 'next/router';
 import DisplayQuestionContainer from './DisplayQuestionContainer';
-import LoginRequired from '@/utils/loginRequired';
+import LoginRequired from './loginRequired';
 
 
 const Home: NextPage = () => {

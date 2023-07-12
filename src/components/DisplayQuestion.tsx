@@ -1,7 +1,7 @@
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import LoginRequired from '../utils/loginRequired';
+import LoginRequired from '../pages/loginRequired';
 
 
 interface Option {

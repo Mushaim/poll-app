@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
-import LoginRequired from '@/utils/loginRequired';
+
 
 const Registration = () => {
   const [username, setUsername] = useState('');
@@ -26,7 +26,7 @@ const Registration = () => {
         await signIn('credentials', {
             email: email,
             password: password,
-            callbackUrl: '/DisplayQuestionContainer',
+            redirect: false,
           });
       router.push('/DisplayQuestionContainer');
     } else {

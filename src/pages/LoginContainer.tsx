@@ -3,7 +3,6 @@ import { NextPage } from "next";
 import { useState } from "react";
 import { useRouter } from 'next/router';
 import { signIn } from "next-auth/react";
-import LoginRequired from "./loginRequired";
 
 const LoginContainer: NextPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -15,32 +14,13 @@ const LoginContainer: NextPage = () => {
     } else {
       setErrorMessage("");
       try {
-        try {
-          LoginRequired();
-        } catch (error) {
-          console.error(error);
-        }
-        console.log("Email:", email);
-        console.log("Password:", password);
-
-        const response = await fetch('/api/login', {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-          headers: {
-            'Content-Type': 'application/json'
-          },
+        const data = await signIn('credentials', {
+          email: email,
+          password: password,
+          redirect:false
         });
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.error);
-        }
-        
+
         if (data) {
-          await signIn('credentials', {
-            email: email,
-            password: password,
-            callbackUrl: '/DisplayQuestionContainer',
-          });
           router.push(`/DisplayQuestionContainer`);
         } else {
           console.log(data);
@@ -62,6 +42,5 @@ const LoginContainer: NextPage = () => {
     </>
   );
 };
-
 
 export default LoginContainer;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Poll from '@/components/Poll';
-import LoginRequired from './loginRequired';
+
 
 interface Option {
   id: number;
@@ -40,11 +40,7 @@ const PollContainer: React.FC<PollContainerProps> = ({ emailRef }) => {
 
   const fetchQuestionData = async () => {
     try {
-      try {
-        LoginRequired();
-      } catch (error) {
-        console.error(error);
-      }
+     
       const response = await fetch(`/api/poll?questionId=${questionId}`);
       const data = await response.json();
       setQuestion(data.question);

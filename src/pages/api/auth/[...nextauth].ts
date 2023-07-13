@@ -1,13 +1,8 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { PrismaClient } from '@prisma/client';
 //import NextAuth from 'next-auth/next';
-import NextAuth, { NextAuthOptions } from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { z } from 'zod';
-import bcrypt from 'bcrypt';
-import fetch from 'node-fetch';
-
-
 
 const prisma = new PrismaClient();
 
@@ -26,9 +21,9 @@ const authOptions: NextAuthOptions = {
         });
         if (!user) return null;
 
-       if(password!==user.password){
-        return null
-       }
+        if (password !== user.password) {
+          return null
+        }
 
         return user as any;
       },
@@ -40,13 +35,7 @@ const authOptions: NextAuthOptions = {
       session.user.email = token.email;
       return session;
     },
-    jwt({ token, account, user }: { token: any; account: any; user: any }) {
-      if (account) {
-        token.accessToken = account.access_token;
-        token.id = user.id;
-        token.email = (user).email;
-        console.log({ user });
-      }
+    jwt({ token }: { token: any }) {
       return token;
     },
   },
@@ -56,7 +45,6 @@ const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
-  secret: process.env.JWT_SECRET,
 };
 
 export default NextAuth(authOptions);

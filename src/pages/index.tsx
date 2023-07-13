@@ -1,21 +1,19 @@
 import type { NextPage } from 'next';
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-import LoginContainer from './LoginContainer';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import DisplayQuestionContainer from './DisplayQuestionContainer';
-import LoginRequired from './loginRequired';
-
+import { useSession } from 'next-auth/react';
 
 const Home: NextPage = () => {
 
   const router = useRouter();
-  try {
-    LoginRequired();
-  } catch (error) {
-    console.error(error);
+  const { data: session, status } = useSession();
+
+  if (status === 'loading') {
+    return <div>Loading...</div>
   }
+
+  console.log(session, status);
 
   const handleClick = () => {
     router.push('/DisplayQuestionContainer');
@@ -29,12 +27,10 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div  >
+      <div>
+        <DisplayQuestionContainer></DisplayQuestionContainer>
+      </div>
 
-<DisplayQuestionContainer></DisplayQuestionContainer>
-
-</div>
-     
     </>
   );
 };

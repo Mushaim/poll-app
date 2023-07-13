@@ -4,7 +4,7 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "prettier"], // make sure prettier is last
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "prettier"], 
   "settings": {
     "react": {
       "version": "detect"
